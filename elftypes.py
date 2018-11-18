@@ -1,7 +1,10 @@
 import struct
 
 def toInt(value, order):
-    return int.from_bytes(value, byteorder='little' if order else 'big')
+    try:
+        return int.from_bytes(value, byteorder='little' if order else 'big')
+    except:
+        return value
 
 
 """ unsigned little_endian 8-bit int """

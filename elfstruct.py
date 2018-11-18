@@ -1,14 +1,17 @@
 from elftypes import *
 from collections import OrderedDict
+from elfdicts import *
 
 class elfstruct:
     def __init__(self, file):
-        # assert Architecture == 64 or Architecture == 32
-        # self.arch = Architecture
         self.f = file
         self.check_binary()
-        self.Phdr = OrderedDict()
-        self.Shdr = OrderedDict()
+        self.Ehdr = []
+        self.Ehdr_d = OrderedDict()
+        self.Phdr = []
+        self.Phdr_d = OrderedDict()
+        self.Shdr = []
+        self.Shdr_d = OrderedDict()
 
     def check_binary(self):
         magic = self.f.read(0x06)
@@ -31,29 +34,49 @@ class elfstruct:
 
     def Elf_Ehdr(self):
         self.f.seek(0, 0)
-        return self.f.read(0x3E) if self.arch == 64 else self.f.read(0x32)
+        self.Ehdr.append(self.f.read(4)) # magic
+        self.Ehdr.append(self.f.read(1)) # class
+        self.Ehdr.append(self.f.read(1)) # data
+        self.Ehdr.append(self.f.read(1)) # version
+        self.Ehdr.append(self.f.read(1)) # osabi
+        self.Ehdr.append(self.f.read(1)) # abiversion
+        self.Ehdr.append(self.f.read(7)) # padding
+        self.Ehdr.append(self.f.read(2)) # type
+        self.Ehdr.append(self.f.read(2)) # machine
+        self.Ehdr.append(self.f.read(4)) # version
+        self.Ehdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+        self.Ehdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+        self.Ehdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+        self.Ehdr.append(self.f.read(4)) # flags
+        self.Ehdr.append(self.f.read(2)) # ehsize
+        self.Ehdr.append(self.f.read(2)) # phentsize
+        self.Ehdr.append(self.f.read(2)) # phnum
+        self.Ehdr.append(self.f.read(2)) # shentsize
+        self.Ehdr.append(self.f.read(2)) # shnum
+        self.Ehdr.append(self.f.read(2)) # shstrndx
+        self.Ehdr = list(map(lambda f: toInt(f, self.little_endian), self.Ehdr))
+        combined = OrderedDict(zip(Ehdr_names, self.Ehdr))
+        return combined
+
 
     def Elf_Phdr(self):
-        # getting program header offset, count and size
-        if self.arch == 64:
-            self.f.seek(0x20, 0)
-            phoff = toInt(self.f.read(8), self.little_endian)
-            self.f.seek(0x36, 0)
-            size = toInt(self.f.read(2), self.little_endian)
-            count = toInt(self.f.read(2), self.little_endian)
-        else:
-            self.f.seek(0x1C, 0)
-            phoff = toInt(self.f.read(4), self.little_endian)
-            self.f.seek(0x2A, 0)
-            size = toInt(self.f.read(2), self.little_endian)
-            count = toInt(self.f.read(2), self.little_endian)
-
-        # moving to phoff address
-        self.f.seek(phoff)
+        self.f.seek(self.Ehdr[11]) # phoff
         # reading the data
-        for i in range(count):
-            self.Phdr[str(i)] = self.f.read(size)
-        return self.Phdr
+        for i in range(self.Ehdr[16]):
+            self.Phdr.append(self.f.read(4))
+            self.Phdr.append(self.f.read(4) if self.arch == 64 else self.f.read(0))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(0) if self.arch == 64 else self.f.read(4))
+            self.Phdr.append(self.f.read(8) if self.arch == 64 else self.f.read(4))
+            self.Phdr = list(map(lambda f: toInt(f, self.little_endian), self.Phdr))
+            combined = OrderedDict(zip(Phdr64_names if self.arch == 64 else Phdr32_names, self.Phdr))
+            self.Phdr_d[i] = combined
+            self.Phdr.clear()
+        return self.Phdr_d
 
     def Elf_Shdr(self):
         # getting section header offset, name index, count and size
@@ -78,11 +101,11 @@ class elfstruct:
         self.f.seek(shoff)
         # reading the data
         for i in range(count):
-            self.Shdr[str(i)] = self.f.read(size)
+            self.Shdr[i] = self.f.read(size)
         return self.Shdr
 
 if __name__ == '__main__':
-    x = elfstruct(open('server1', 'rb'))
-    print(x.Elf_Ehdr())
-    x.Elf_Phdr()
-    x.Elf_Shdr()
+    x = elfstruct(open('server', 'r+b'))
+    x.Elf_Ehdr()
+    lol = x.Elf_Phdr()
+    #x.Elf_Shdr()
