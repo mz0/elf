@@ -23,7 +23,7 @@ class parser:
 
     def getheaders(self):
         self.headers = elfstruct(self.file)
-        self.Ehdr = self.headers.Elf_Ehdr()
+        #self.Ehdr = self.headers.Elf_Ehdr()
         self.Phdr = self.headers.Elf_Phdr()
         self.Shdr = self.headers.Elf_Shdr()
 
@@ -40,7 +40,7 @@ def main():
         print(usage)
         exit(0)
     x = parser('server')
-    print(x.Ehdr)
+    print(x.Shdr)
 
 if __name__ == '__main__':
     main()
