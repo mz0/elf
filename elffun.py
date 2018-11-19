@@ -5,7 +5,7 @@ from elftypes import *
 from collections import OrderedDict
 
 usage = """
-Usage: ./elffun.py <option(s)> <file>
+Usage: ./elffun.py <option> <file>
 This is a short python implementation of linux tool readelf with big changes.
 You can still use:
     -a --all                Display all info
@@ -38,32 +38,45 @@ class parser:
             print('An error while openning a file occurred')
             exit(1)
 
-    def get_all_headers(self):
-        return 'lol'
-
     def get_file_header(self):
+        print('Elf Header:')
         hdr = self.headers.Elf_Ehdr()
         [print(f'{key.ljust(40)} {hex(value)}') for key, value in hdr.items()]
+        print('\n')
 
     def get_program_headers(self):
         hdr = self.headers.Elf_Phdr()
-        print('Type\t\tFlags\tOffset\tVirtAddr\tPhysAddr\tFileSiz\tMemSiz\tAlign')
+        print("Program headers:")
+        print('Type\t\tFlags\t\tOffset\t\tVirtAddr\tPhysAddr\tFileSiz\t\tMemSiz\t\tAlign')
         for _, d in hdr.items():
-            print(f'{d.get("Type")}\t\t{d.get("Flags")}\t{d.get("Offset")}\t{d.get("VirtAddr")}\t{d.get("PhysAddr")}\t{d.get("FileSiz")}\t{d.get("MemSiz")}\t{d.get("Align")}')
+            for _, v in d.items():
+                print(f'{hex(v).ljust(16)}', end='')
+            print()
+        print('\n')
 
     def get_section_headers(self):
-        return self.headers.Elf_Shdr()
+        hdr = self.headers.Elf_Shdr()
+        print(f'Section headers:\n{"[Num]".ljust(12)}',end='')
+        [print(f'{name.ljust(12)}', end='') for name in Shdr_names]
+        print()
+        for num, d in hdr.items():
+            print(f'{str([num]).ljust(12)}', end='')
+            for _, v in d.items():
+                print(f'{hex(v).ljust(12)}', end='')
+            print()
+        print('\n')
+
+    def get_all_headers(self):
+        self.get_file_header()
+        self.get_program_headers()
+        self.get_section_headers()
 
     def parse(self):
         function = self.commands.get(self.command)
-        if not function:
-            print(usage)
-            exit(1)
         try:
             function()
-        except Exception as e:
-            print(e)
-            exit(1)
+        except:
+            print(usage)
 
 def main():
     if len(argv) != 3:

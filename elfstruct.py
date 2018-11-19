@@ -42,8 +42,7 @@ class elfstruct:
 
 
     def Elf_Phdr(self):
-        self.f.seek(self.Ehdr[11]) # phoff
-        # reading the data
+        self.f.seek(self.Ehdr[11])
         for i in range(self.Ehdr[16]):
             if self.arch:
                 [self.Phdr.append(self.f.read(i)) for i in Phdr64]
@@ -56,9 +55,7 @@ class elfstruct:
         return self.Phdr_d
 
     def Elf_Shdr(self):
-        self.f.seek(self.Ehdr[12]) # shoff
-
-        # reading the data
+        self.f.seek(self.Ehdr[12])
         for i in range(self.Ehdr[18]):
             if self.arch:
                 [self.Shdr.append(self.f.read(i)) for i in Shdr64]

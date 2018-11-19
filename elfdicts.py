@@ -37,10 +37,10 @@ Phdr64_names = ['Type', 'Flags', 'Offset', 'VirtAddr', 'PhysAddr', 'FileSiz',
 Phdr32_names = ['Type', 'Offset', 'VirtAddr', 'PhysAddr', 'FileSiz', 'MemSiz',
                 'Flags', 'Align']
 
-Shdr_names = ['Name:', 'Type:', 'Flags:', 'Virtual address of the section in memory:',
-              'Offset of the section:', 'Size of the section:',
-              'Link, index of the section:', 'Extra information about the section:',
-              'Alignment:', 'Size for each Entry:']
+Shdr_names = ['Name', 'Type', 'Flags', 'VirtAddr',
+              'Offset', 'Size',
+              'Link', 'Info',
+              'Align:', 'EntSize']
 
 Ehdr64 = [4, 1, 1, 1, 1, 1, 7, 2, 2, 4, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2]
 Ehdr32 = [4, 1, 1, 1, 1, 1, 7, 2, 2, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2]
