@@ -18,13 +18,9 @@ class parser:
     def __init__(self,command, filename):
         self.commands = {
         '-a':self.get_all_headers,
-        '--all':self.get_all_headers,
         '-l':self.get_program_headers,
-        '--program-headers':self.get_program_headers,
         '-h':self.get_file_header,
-        '--file-header':self.get_file_header,
         '-S':self.get_section_headers,
-        '--section-headers':self.get_section_headers,
         }
         self.command = command
         self.file = self._open(filename)
