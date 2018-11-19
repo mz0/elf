@@ -31,15 +31,11 @@ Ehdr_names = ['Magic:', 'Architecture:', 'Endianness:', 'Version:', 'OSABI:',
               'Size of section headers:', 'Number of section headers:',
               'Section header names address:']
 
-Phdr64_names = ['Type:', 'Flags:', 'Offset of the segment in the file:',
-                'Virtual address of the segment in memory:', 'Physical address:',
-                'Size of the segment in the file:', 'Size of the segment in memory:',
-                'Alignment:']
+Phdr64_names = ['Type', 'Flags', 'Offset', 'VirtAddr', 'PhysAddr', 'FileSiz',
+                'MemSiz', 'Align']
 
-Phdr32_names = ['Type:', 'Offset of the segment in the file:',
-                'Virtual address of the segment in memory:', 'Physical address:',
-                'Size of the segment in the file:', 'Size of the segment in memory:',
-                'Flags:', 'Alignment:']
+Phdr32_names = ['Type', 'Offset', 'VirtAddr', 'PhysAddr', 'FileSiz', 'MemSiz',
+                'Flags', 'Align']
 
 Shdr_names = ['Name:', 'Type:', 'Flags:', 'Virtual address of the section in memory:',
               'Offset of the section:', 'Size of the section:',

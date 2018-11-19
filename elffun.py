@@ -7,12 +7,11 @@ from collections import OrderedDict
 usage = """
 Usage: ./elffun.py <option(s)> <file>
 This is a short python implementation of linux tool readelf with big changes.
-You still can use:
+You can still use:
     -a --all                Display all info
     -h --file-header        Display Elf header
     -l --program-headers    Display Program headers
     -S --section-headers    Display Section headers
-    -t --section-details    Display The section details
 """
 
 class parser:
@@ -43,10 +42,14 @@ class parser:
         return 'lol'
 
     def get_file_header(self):
-        return self.headers.Elf_Ehdr()
+        hdr = self.headers.Elf_Ehdr()
+        [print(f'{key.ljust(40)} {hex(value)}') for key, value in hdr.items()]
 
     def get_program_headers(self):
-        return self.headers.Elf_Phdr()
+        hdr = self.headers.Elf_Phdr()
+        print('Type\t\tFlags\tOffset\tVirtAddr\tPhysAddr\tFileSiz\tMemSiz\tAlign')
+        for _, d in hdr.items():
+            print(f'{d.get("Type")}\t\t{d.get("Flags")}\t{d.get("Offset")}\t{d.get("VirtAddr")}\t{d.get("PhysAddr")}\t{d.get("FileSiz")}\t{d.get("MemSiz")}\t{d.get("Align")}')
 
     def get_section_headers(self):
         return self.headers.Elf_Shdr()
@@ -57,21 +60,16 @@ class parser:
             print(usage)
             exit(1)
         try:
-            result = function()
+            function()
         except Exception as e:
             print(e)
             exit(1)
-        print(result)
-
 
 def main():
     if len(argv) != 3:
         print(usage)
-        exit(0)
-    elif len(argv) == 3:
-        command, file = argv[1], argv[2]
-        print(command, file)
-        x = parser(command, file)
+    else:
+        x = parser(argv[1], argv[2])
         x.parse()
 
 if __name__ == '__main__':

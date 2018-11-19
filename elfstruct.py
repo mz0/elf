@@ -37,8 +37,8 @@ class elfstruct:
         else:
             [self.Ehdr.append(self.f.read(i)) for i in Ehdr32]
         self.Ehdr = list(map(lambda f: toInt(f, self.little_endian), self.Ehdr))
-        combined = OrderedDict(zip(Ehdr_names, self.Ehdr))
-        return combined
+        self.Ehdr_d = OrderedDict(zip(Ehdr_names, self.Ehdr))
+        return self.Ehdr_d
 
 
     def Elf_Phdr(self):
@@ -50,7 +50,7 @@ class elfstruct:
             else:
                 [self.Phdr.append(self.f.read(i)) for i in Phdr32]
             self.Phdr = list(map(lambda f: toInt(f, self.little_endian), self.Phdr))
-            combined = OrderedDict(zip(Phdr64_names if self.arch  else Phdr32_names, self.Phdr))
+            combined = OrderedDict(zip(Phdr64_names if self.arch else Phdr32_names, self.Phdr))
             self.Phdr_d[i] = combined
             self.Phdr.clear()
         return self.Phdr_d
@@ -74,6 +74,6 @@ class elfstruct:
 
 if __name__ == '__main__':
     x = elfstruct(open('server', 'r+b'))
-    #print(x.Elf_Ehdr())
+    print(x.Elf_Ehdr())
     #print(x.Elf_Phdr())
-    print(x.Elf_Shdr())
+    #print(x.Elf_Shdr())
