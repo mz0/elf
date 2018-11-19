@@ -12,6 +12,10 @@ You can still use:
     -h --file-header        Display Elf header
     -l --program-headers    Display Program headers
     -S --section-headers    Display Section headers
+New:
+    -sign                   Sign your app (6bytes message)
+    -rh                     Remove headers
+    -ah                     Add headers
 """
 
 class parser:
