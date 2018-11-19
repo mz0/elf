@@ -45,3 +45,12 @@ Shdr_names = ['Name:', 'Type:', 'Flags:', 'Virtual address of the section in mem
               'Offset of the section:', 'Size of the section:',
               'Link, index of the section:', 'Extra information about the section:',
               'Alignment:', 'Size for each Entry:']
+
+Ehdr64 = [4, 1, 1, 1, 1, 1, 7, 2, 2, 4, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2]
+Ehdr32 = [4, 1, 1, 1, 1, 1, 7, 2, 2, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2]
+
+Phdr64 = [4, 4, 8, 8, 8, 8, 8, 0, 8]
+Phdr32 = [4, 0, 4, 4, 4, 4, 4, 4, 4]
+
+Shdr64 = [4, 4, 8, 8, 8, 8, 4, 4, 8, 8]
+Shdr32 = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]

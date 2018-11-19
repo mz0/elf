@@ -16,16 +16,20 @@ You still can use:
 """
 
 class parser:
-    def __init__(self, filename):
+    def __init__(self,command, filename):
+        self.commands = {
+        '-a':self.get_all_headers,
+        '--all':self.get_all_headers,
+        '-l':self.get_program_headers,
+        '--program-headers':self.get_program_headers,
+        '-h':self.get_file_header,
+        '--file-header':self.get_file_header,
+        '-S':self.get_section_headers,
+        '--section-headers':self.get_section_headers,
+        }
+        self.command = command
         self.file = self._open(filename)
-        self.Ehdr = OrderedDict()
-        self.getheaders()
-
-    def getheaders(self):
         self.headers = elfstruct(self.file)
-        #self.Ehdr = self.headers.Elf_Ehdr()
-        self.Phdr = self.headers.Elf_Phdr()
-        self.Shdr = self.headers.Elf_Shdr()
 
     def _open(self, filename):
         try:
@@ -35,12 +39,40 @@ class parser:
             print('An error while openning a file occurred')
             exit(1)
 
+    def get_all_headers(self):
+        return 'lol'
+
+    def get_file_header(self):
+        return self.headers.Elf_Ehdr()
+
+    def get_program_headers(self):
+        return self.headers.Elf_Phdr()
+
+    def get_section_headers(self):
+        return self.headers.Elf_Shdr()
+
+    def parse(self):
+        function = self.commands.get(self.command)
+        if not function:
+            print(usage)
+            exit(1)
+        try:
+            result = function()
+        except Exception as e:
+            print(e)
+            exit(1)
+        print(result)
+
+
 def main():
-    if len(argv) == 3:
+    if len(argv) != 3:
         print(usage)
         exit(0)
-    x = parser('server')
-    print(x.Shdr)
+    elif len(argv) == 3:
+        command, file = argv[1], argv[2]
+        print(command, file)
+        x = parser(command, file)
+        x.parse()
 
 if __name__ == '__main__':
     main()
