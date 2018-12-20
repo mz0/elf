@@ -1,7 +1,3 @@
 .gdb_history
-blogsite
-antireverse_tools
-notes
 __pycache__*
 server*
-elfparser.py
